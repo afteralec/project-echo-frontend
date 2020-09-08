@@ -1,3 +1,67 @@
-body {
-  background: #333;
+.flow > * + * {
+  margin-top: 1rem;
+}
+
+.flow-s > * + * {
+  margin-top: 0.5rem;
+}
+
+.flow-left > * + * {
+  margin-left: 1rem;
+}
+
+.flow-left-s > * + * {
+  margin-left: 0.5rem;
+}
+
+.px-col-1 > * {
+  padding: 1rem;
+}
+
+.px-s {
+  padding: 0.5rem;
+}
+
+.px-1 {
+  padding: 1rem;
+}
+
+.px-sides-1 {
+  padding: 0 1rem;
+}
+
+.px-top-4 {
+  padding-top: 4rem;
+}
+
+.mx-right-3 {
+  margin-right: 3rem;
+}
+
+.mx-bottom-1 {
+  margin-bottom: 1rem;
+}
+
+.h-100 {
+  height: 100vh;
+}
+
+.min-h-100 {
+  min-height: 100vh;
+}
+
+.w-25 {
+  width: 25vw;
+}
+
+.w-75 {
+  width: 75vw;
+}
+
+.f-up-1 {
+  font-size: 1.1rem;
+}
+
+.f-down-1 {
+  font-size: 0.9rem;
 }

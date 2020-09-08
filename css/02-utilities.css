@@ -1,0 +1,39 @@
+.hidden {
+  display: none;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.align-end {
+  align-items: flex-end;
+}
+
+.bg-grey {
+  background-color: #333;
+}
+
+.bg-white {
+  background-color: #fff;
+}
+
+.bx-1 {
+  border: 1px solid #333;
+}
+
+.br-5 {
+  border-radius: 5px;
+}
+
+.br-15 {
+  border-radius: 15px;
+}
