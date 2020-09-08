@@ -8,8 +8,50 @@
     <title>Echo</title>
   </head>
   <body>
-    <nav></nav>
-    <header></header>
-    <main></main>
+    <main id="wrapper" class="flex px-top-4">
+      <section id="user" class="px-sides-1 w-25 flow flex flex-col px-col-1">
+        <div class="bx-1 br-15 flow-s">
+          <h2>Hi, Amelie!</h2>
+          <h3>Current Status: Available</h3>
+          <button class="px-s br-5 echoButton">Echo</button>
+        </div>
+        <h2>Listeners:</h2>
+        <div class="bx-1 br-15"><h3>Alec DuBois - Coding</h3></div>
+        <div class="bx-1 br-15"><h3>Zana Hertica - Coding</h3></div>
+        <div class="bx-1 br-15"><h3>Nathan Chung - Coding</h3></div>
+      </section>
+
+      <section id="feed" class="px-sides-1w-75">
+        <div id="echoForm" class="hidden px-1 mx-bottom-1 mx-right-3">
+          <form class="flex flex-col flow-s">
+            <label for="content"><h2>What Do You Want To Say?</h2></label>
+            <textarea id="content" name="content" class="br-5"></textarea>
+            <label for="listeners"><h3>Who Do You Want To Hear It?</h3></label>
+            <input type="hidden" name="listeners" />
+            <div id="listeners" class="flex flex-wrap flow-left-s">
+              <button class="br-5">Everyone</button>
+              <button class="br-5">Alec</button>
+              <button class="br-5">Zana</button>
+              <button class="br-5">Nathan</button>
+            </div>
+            <button class="px-s br-5">Echo</button>
+          </form>
+        </div>
+
+        <div class="px-sides-1 flow flex flex-col px-col-1">
+          <div class="mx-right-3 bx-1 br-15 flow-s">
+            <div class="flex align-end flow-left-s">
+              <p class="f-up-1"><strong>Echo Title</strong></p>
+              <p class="f-down-1">Alec DuBois</p>
+            </div>
+            <p>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptas
+              dignissimos eaque, delectus temporibus dolore neque dicta sint
+              cupiditate facere odit.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
   </body>
 </html>
