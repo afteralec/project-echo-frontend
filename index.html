@@ -8,20 +8,43 @@
     <title>Echo</title>
   </head>
   <body>
-    <main id="wrapper" class="flex px-top-4">
+    <div id="login-form-wrapper" class="px-top-4">
+      <form id="loginForm">
+        <div>
+          <label for="email">Email Address</label>
+          <input type="email" name="email" id="email" />
+        </div>
+
+        <div>
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" />
+        </div>
+
+        <input type="submit" value="Let's Go!" />
+      </form>
+    </div>
+
+    <main id="wrapper" class="flex px-top-4 hidden">
+
+      <!-- Left-hand user bar -->
       <section id="user" class="px-sides-1 w-25 flow flex flex-col px-col-1">
+
+        <!-- Logged-in user -->
         <div class="bx-1 br-15 flow-s">
           <h2>Hi, Amelie!</h2>
           <h3>Current Status: Available</h3>
           <button class="px-s br-5 echoButton">Echo</button>
         </div>
+
+        <!-- Listeners -->
         <h2>Listeners:</h2>
-        <!-- <div class="bx-1 br-15"><h3>Alec DuBois - Coding</h3></div>
-        <div class="bx-1 br-15"><h3>Zana Hertica - Coding</h3></div>
-        <div class="bx-1 br-15"><h3>Nathan Chung - Coding</h3></div> -->
+
       </section>
 
+      <!-- Central Echo section -->
       <section class="px-sides-1 w-75">
+
+        <!-- Form to add new echo -->
         <div id="echoForm" class="hidden px-1 mx-bottom-1 mx-right-3">
           <form class="flex flex-col flow-s">
             <label for="content"><h2>What Do You Want To Say?</h2></label>
@@ -38,9 +61,12 @@
           </form>
         </div>
 
+        <!-- Echo feed -->
         <div id="feed" class="px-sides-1 flow flex flex-col px-col-1"></div>
+
       </section>
     </main>
+
     <footer>
       <p class="text-center px-1">Made with &#x1F366 by Zana Hertica & Alec DuBois</p>
     </footer>
