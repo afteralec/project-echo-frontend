@@ -1,3 +1,37 @@
 #echoForm textarea {
   resize: vertical;
 }
+
+img.round {
+  border-radius: 50%;
+}
+
+.pbr-right {
+  position: relative;
+}
+
+.pbr-right:after {
+  content: "";
+  background: #333;
+  opacity: 0.5;
+  position: absolute;
+  height: 80%;
+  width: 1px;
+  top: 10%;
+  right: -1px;
+}
+
+.pbr-bottom {
+  position: relative;
+}
+
+.pbr-bottom:after {
+  content: "";
+  background: #333;
+  opacity: 0.5;
+  position: absolute;
+  width: 90%;
+  height: 1px;
+  left: 5%;
+  bottom: -1px;
+}
