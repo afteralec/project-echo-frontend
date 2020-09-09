@@ -1,3 +1,5 @@
+let current_user = {}; // Global user object to simulate auth
+
 initClickEvents();
 initSubmitEvents();
 
@@ -36,6 +38,8 @@ function handleLoginFormSubmit(event) {
 function handleUserClicks(event) {
   if (event.target.matches(".echoButton")) {
     toggleEchoForm();
+  } else if (event.target.matches(".listen")) {
+    postListen(event.target.dataset.id);
   }
 }
 
@@ -58,7 +62,10 @@ function appendListener(element, listener) {
 }
 
 function renderListener(listener) {
-  return `<div class="pbr-bottom"><h3>${listener.first_name} ${listener.last_name} - ${listener.status}</h3></div>`;
+  return `<div class="flex flow-left-s pbr-bottom">
+            <h3>${listener.first_name} ${listener.last_name} - ${listener.status}</h3>
+            <button data-id="${listener.id}" class="listen">Listen</button>
+          </div>`;
 }
 
 function appendEchos(echos) {
@@ -77,7 +84,7 @@ function renderEcho(echo) {
   return `
   <div class="flow-left flex align-center pbr-bottom">
     <div class="flex flex-col align-center flow-s">
-      <img class="round" src="https://www.gravatar.com/avatar/6a23f0f21cd556add3bd744ff812da04?d=robohash" />
+      <img class="round" src="${echo.user.gravatar_url}" />
       <p class="f-down-1">${echo.user.first_name}</p>
     </div>
     <p>${echo.message}</p>
@@ -110,6 +117,7 @@ function fetchEchos(id) {
 }
 
 function loadUser(user) {
+  current_user = user;
   appendListeners(user.listeners);
 }
 
@@ -125,5 +133,11 @@ function authenticateUser(user) {
 
   return fetch("http://localhost:3000/login", configObj).then((resp) =>
     resp.json()
+  );
+}
+
+function postListen(user_id) {
+  fetch(
+    `http://localhost:3000/api/v1/listen/${user_id}?listener_id=${current_user.id}`
   );
 }
