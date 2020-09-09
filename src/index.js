@@ -126,4 +126,4 @@ function authenticateUser(user) {
   return fetch("http://localhost:3000/login", configObj).then((resp) =>
     resp.json()
   );
-}
+} 
