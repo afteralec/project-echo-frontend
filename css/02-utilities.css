@@ -22,6 +22,10 @@
   align-items: flex-end;
 }
 
+.justify-self-end {
+  justify-self: end;
+}
+
 .bg-grey {
   background-color: #333;
 }
