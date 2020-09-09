@@ -1,11 +1,36 @@
 initClickEvents();
-fetchUser(15).then(loadUser);
-fetchEchos(15).then(appendEchos);
+initSubmitEvents();
+
+function initSubmitEvents() {
+  const loginForm = document.getElementById("loginForm");
+
+  loginForm.addEventListener("submit", handleLoginFormSubmit);
+}
 
 function initClickEvents() {
   const user = document.getElementById("user");
 
   user.addEventListener("mouseup", handleUserClicks);
+}
+
+function handleLoginFormSubmit(event) {
+  event.preventDefault();
+
+  const user = {
+    email: event.target.email.value,
+    password: event.target.email.password,
+  };
+
+  authenticateUser(user).then((resp) => {
+    if (!resp.message) {
+      const wrapper = document.getElementById("wrapper");
+      hideElement(event.target.parentElement);
+      revealElement(wrapper);
+
+      fetchUser(resp.id).then(loadUser);
+      fetchEchos(resp.id).then(appendEchos);
+    }
+  });
 }
 
 function handleUserClicks(event) {
@@ -33,7 +58,7 @@ function appendListener(element, listener) {
 }
 
 function renderListener(listener) {
-  return `<div class="bx-1 br-15"><h3>${listener.first_name} ${listener.last_name} - ${listener.status}</h3></div>`;
+  return `<div class="pbr-bottom"><h3>${listener.first_name} ${listener.last_name} - ${listener.status}</h3></div>`;
 }
 
 function appendEchos(echos) {
@@ -86,4 +111,19 @@ function fetchEchos(id) {
 
 function loadUser(user) {
   appendListeners(user.listeners);
+}
+
+function authenticateUser(user) {
+  const configObj = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ session: user }),
+  };
+
+  return fetch("http://localhost:3000/login", configObj).then((resp) =>
+    resp.json()
+  );
 }
