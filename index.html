@@ -32,7 +32,11 @@
         <!-- Logged-in user -->
         <div class="bx-1 br-15 flow-s">
           <h2>Hi, Amelie!</h2>
-          <h3>Current Status: Available</h3>
+          <h4 class="flex flex-row flow-left">
+            <span>Status:</span>
+            <span id="status" class="user-status"></span>
+            <form id="statusForm" class="hidden"><input type="text" name="status" /></form>
+          </h4>
           <button class="px-s br-5 echoButton">Echo</button>
         </div>
 
@@ -49,20 +53,28 @@
           <form class="flex flex-col flow-s">
             <label for="message"><h2>What Do You Want To Say?</h2></label>
             <textarea id="message" name="message" class="br-5"></textarea>
-            <label for="listeners"><h3>Who Do You Want To Hear It?</h3></label>
+            <!-- <label for="listeners"><h3>Who Do You Want To Hear It?</h3></label>
             <input type="hidden" name="listeners" />
             <div id="listeners" class="flex flex-wrap flow-left-s">
               <button class="br-5">Everyone</button>
               <button class="br-5">Alec</button>
               <button class="br-5">Zana</button>
               <button class="br-5">Nathan</button>
-            </div>
+            </div> -->
             <button class="px-s br-5">Echo</button>
           </form>
         </div>
 
         <!-- Echo feed -->
-        <div id="feed" class="px-sides-1 flow flex flex-col px-col-1"></div>
+        <div id="feed" class="px-sides-1 flow flex flex-col px-col-1">
+          <div id="noEchos" class="hidden flow-left flex align-center pbr-bottom">
+            <div class="flex flex-col align-center flow-s">
+              <img class="round" src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y&d=robohash" />
+              <p class="f-down-1">Echo</p>
+            </div>
+            <p>Looks like there's no echoes to show!</p>
+          </div>
+        </div>
 
       </section>
     </main>
