@@ -153,6 +153,3 @@ function postListen(user_id) {
   ).then((resp) => resp.json());
 }
  
-function addEcho() {
-  let echo = document.getElementsByClassName()
-}
