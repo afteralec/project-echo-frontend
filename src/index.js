@@ -1,8 +1,10 @@
 let current_user = {}; // Global user object to simulate auth
 
+// Functions actually called by this file on load
 initClickEvents();
 initSubmitEvents();
 
+// Event handling
 function initSubmitEvents() {
   const loginForm = document.getElementById("loginForm");
 
@@ -38,11 +40,42 @@ function handleUserClicks(event) {
   if (event.target.matches(".echoButton")) {
     toggleEchoForm();
   } else if (event.target.matches(".listen")) {
-    postListen(event.target.dataset.id).then((echos) => {
-      const randomTime = (Math.floor(Math.random() * Math.floor(4)) + 2) * 1000;
+    if (listenButtonActive(event.target)) {
+      postListen(event.target.dataset.id).then((echos) => {
+        const randomTime =
+          (Math.floor(Math.random() * Math.floor(4)) + 2) * 1000;
 
-      setTimeout(appendEchos, randomTime, echos);
-    });
+        setTimeout(appendEchos, randomTime, echos);
+      });
+
+      deactivateListenButton(event.target);
+    } else {
+      deleteListen(event.target.dataset.id);
+      activateListenButton(event.target);
+    }
+  }
+}
+
+function activateListenButton(listenButton) {
+  listenButton.textContent = "Listen";
+  listenButton.dataset.active = "1";
+}
+
+function deactivateListenButton(listenButton) {
+  listenButton.textContent = "Unlisten";
+  listenButton.dataset.active = "0";
+}
+
+function listenButtonActive(listenButton) {
+  return !!+listenButton.dataset.active;
+}
+
+// DOM Manipulation
+function toggleListenButton(element) {
+  if (element.textContent === "Listen") {
+    element.textContent = "Unlisten";
+  } else {
+    element.textContent = "Listen";
   }
 }
 
@@ -66,9 +99,21 @@ function appendListener(element, listener) {
 
 function renderListener(listener) {
   return `<div class="flex flow-left-s pbr-bottom">
-            <p>${listener.first_name} ${listener.last_name} - ${listener.status}</p>
-            <button data-id="${listener.id}" class="listen">Listen</button>
+            <p>${listener.first_name} - ${listener.status}</p>
+            ${renderListenButton(listener)}
           </div>`;
+}
+
+function renderListenButton(listener) {
+  let active = "1";
+  let text = "Listen";
+
+  if (listener.listeners.map((ele) => ele.id).includes(current_user.id)) {
+    active = "0";
+    text = "Unlisten";
+  }
+
+  return `<button data-id="${listener.id}" data-active="${active}" class="listen">${text}</button>`;
 }
 
 function appendEchos(echos) {
@@ -95,6 +140,7 @@ function renderEcho(echo) {
   `;
 }
 
+// Utility functions
 function elementVisible(element) {
   return !element.classList.contains("hidden");
 }
@@ -107,6 +153,7 @@ function revealElement(element) {
   element.classList.remove("hidden");
 }
 
+// API calls
 function fetchUser(id) {
   return fetch(`http://localhost:3000/api/v1/users/${id}`).then((resp) =>
     resp.json()
@@ -140,16 +187,13 @@ function authenticateUser(user) {
 }
 
 function postListen(user_id) {
-  // const configObj = {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Accept: "application/json",
-  //   },
-  // };
-
   return fetch(
     `http://localhost:3000/api/v1/listen/${user_id}?listener_id=${current_user.id}`
   ).then((resp) => resp.json());
 }
- 
+
+function deleteListen(user_id) {
+  return fetch(
+    `http://localhost:3000/api/v1/unlisten/${user_id}?listener_id=${current_user.id}`
+  ).then((resp) => resp.json());
+}
