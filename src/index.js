@@ -9,12 +9,32 @@ function initSubmitEvents() {
   const loginForm = document.getElementById("loginForm");
 
   loginForm.addEventListener("submit", handleLoginFormSubmit);
+
+  const echoForm = document.getElementById("echoForm")
+
+  echoForm.addEventListener("submit", handleFormEchoSubmit);
+
 }
 
 function initClickEvents() {
   const user = document.getElementById("user");
 
   user.addEventListener("mouseup", handleUserClicks);
+}
+
+function handleFormEchoSubmit(event) {
+  event.preventDefault()
+  const feed = document.getElementById("feed");
+  const echo = {
+    echo:{
+      user_id: current_user.id,
+      message: event.target.message.value,
+      listeners: current_user.listeners.map(listener => listener.id)
+    }
+  }
+  postEcho(echo).then(echo => { appendEcho(feed, echo) }).catch(console.log)
+  event.target.message.value = ""
+  hideElement(event.target.parentElement)
 }
 
 function handleLoginFormSubmit(event) {
@@ -196,4 +216,17 @@ function deleteListen(user_id) {
   return fetch(
     `http://localhost:3000/api/v1/unlisten/${user_id}?listener_id=${current_user.id}`
   ).then((resp) => resp.json());
+}
+
+function postEcho(echo) {
+  const configObj = {
+    method: "POST",
+    headers: {
+      "Content-Type":"application/json",
+      Accept: "application/json"
+    },
+    body: JSON.stringify(echo),
+  };
+
+  return fetch(`http://localhost:3000/api/v1/echos`, configObj).then(res => res.json())
 }
