@@ -30,7 +30,6 @@ function handleLoginFormSubmit(event) {
       revealElement(wrapper);
 
       fetchUser(resp.id).then(loadUser);
-      fetchEchos(resp.id).then(appendEchos);
     }
   });
 }
@@ -39,7 +38,11 @@ function handleUserClicks(event) {
   if (event.target.matches(".echoButton")) {
     toggleEchoForm();
   } else if (event.target.matches(".listen")) {
-    postListen(event.target.dataset.id);
+    postListen(event.target.dataset.id).then((echos) => {
+      const randomTime = (Math.floor(Math.random() * Math.floor(4)) + 2) * 1000;
+
+      setTimeout(appendEchos, randomTime, echos);
+    });
   }
 }
 
@@ -63,7 +66,7 @@ function appendListener(element, listener) {
 
 function renderListener(listener) {
   return `<div class="flex flow-left-s pbr-bottom">
-            <h3>${listener.first_name} ${listener.last_name} - ${listener.status}</h3>
+            <p>${listener.first_name} ${listener.last_name} - ${listener.status}</p>
             <button data-id="${listener.id}" class="listen">Listen</button>
           </div>`;
 }
@@ -137,9 +140,17 @@ function authenticateUser(user) {
 }
 
 function postListen(user_id) {
-  fetch(
+  // const configObj = {
+  //   method: "GET",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Accept: "application/json",
+  //   },
+  // };
+
+  return fetch(
     `http://localhost:3000/api/v1/listen/${user_id}?listener_id=${current_user.id}`
-  );
+  ).then((resp) => resp.json());
 }
  
 function addEcho() {
