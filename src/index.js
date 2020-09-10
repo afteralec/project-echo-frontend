@@ -141,3 +141,7 @@ function postListen(user_id) {
     `http://localhost:3000/api/v1/listen/${user_id}?listener_id=${current_user.id}`
   );
 }
+ 
+function addEcho() {
+  let echo = document.getElementsByClassName()
+}
