@@ -7,34 +7,40 @@ initSubmitEvents();
 // Event handling
 function initSubmitEvents() {
   const loginForm = document.getElementById("loginForm");
+  const echoForm = document.getElementById("echoForm");
+  const user = document.getElementById("user");
 
   loginForm.addEventListener("submit", handleLoginFormSubmit);
-
-  const echoForm = document.getElementById("echoForm")
-
   echoForm.addEventListener("submit", handleFormEchoSubmit);
-
+  user.addEventListener("submit", handleStatusFormSubmit);
 }
 
 function initClickEvents() {
   const user = document.getElementById("user");
+  const feed = document.getElementById("feed");
 
   user.addEventListener("mouseup", handleUserClicks);
+  feed.addEventListener("mouseup", handleFeedClicks);
 }
 
 function handleFormEchoSubmit(event) {
-  event.preventDefault()
+  event.preventDefault();
+
   const feed = document.getElementById("feed");
   const echo = {
-    echo:{
+    echo: {
       user_id: current_user.id,
       message: event.target.message.value,
-      listeners: current_user.listeners.map(listener => listener.id)
-    }
-  }
-  postEcho(echo).then(echo => { appendEcho(feed, echo) }).catch(console.log)
-  event.target.message.value = ""
-  hideElement(event.target.parentElement)
+      listeners: current_user.listeners.map((listener) => listener.id),
+    },
+  };
+  postEcho(echo)
+    .then((echo) => {
+      prependEcho(feed, echo);
+    })
+    .catch(console.log);
+  event.target.message.value = "";
+  hideElement(event.target.parentElement);
 }
 
 function handleLoginFormSubmit(event) {
@@ -52,42 +58,79 @@ function handleLoginFormSubmit(event) {
       revealElement(wrapper);
 
       fetchUser(resp.id).then(loadUser);
+      fetchEchos(resp.id).then(appendEchos);
     }
   });
+}
+
+function handleStatusFormSubmit(event) {
+  event.preventDefault();
+
+  const status = document.getElementById("status");
+  const newStatus = event.target.status.value;
+
+  patchStatus(newStatus);
+
+  hideElement(event.target);
+  status.textContent = newStatus;
+  revealElement(status);
 }
 
 function handleUserClicks(event) {
   if (event.target.matches(".echoButton")) {
     toggleEchoForm();
   } else if (event.target.matches(".listen")) {
-    if (listenButtonActive(event.target)) {
-      postListen(event.target.dataset.id).then((echos) => {
+    const target_id = event.target.dataset.id;
+    const feed = document.getElementById("feed");
+    const echoes = feed.querySelectorAll(`div[data-user-id="${target_id}"]`);
+
+    if (elementActive(event.target)) {
+      postListen(target_id).then((echos) => {
         const randomTime =
           (Math.floor(Math.random() * Math.floor(4)) + 2) * 1000;
 
         setTimeout(appendEchos, randomTime, echos);
       });
 
+      updateStatuses(echoes, "Listening");
       deactivateListenButton(event.target);
     } else {
-      deleteListen(event.target.dataset.id);
+      updateStatuses(echoes, "Not Listening");
+      deleteListen(target_id);
       activateListenButton(event.target);
+    }
+  } else if (event.target.matches("#status")) {
+    const status = document.getElementById("status");
+    const statusForm = document.getElementById("statusForm");
+
+    hideElement(status);
+    revealElement(statusForm);
+    statusForm.status.value = status.textContent;
+  }
+}
+
+function handleFeedClicks(event) {
+  if (event.target.matches(".unlisten")) {
+    if (elementActive(event.target)) {
+      unlistenEcho(event.target.dataset.userId);
+      event.target.textContent = "Oops! Keep This Echo";
+      deactivateElement(event.target);
+    } else {
+      listenEcho(event.target.dataset.userId);
+      event.target.textContent = "Unlisten This Echo";
+      activateElement(event.target);
     }
   }
 }
 
 function activateListenButton(listenButton) {
   listenButton.textContent = "Listen";
-  listenButton.dataset.active = "1";
+  activateElement(listenButton);
 }
 
 function deactivateListenButton(listenButton) {
   listenButton.textContent = "Unlisten";
-  listenButton.dataset.active = "0";
-}
-
-function listenButtonActive(listenButton) {
-  return !!+listenButton.dataset.active;
+  deactivateElement(listenButton);
 }
 
 // DOM Manipulation
@@ -138,9 +181,16 @@ function renderListenButton(listener) {
 
 function appendEchos(echos) {
   const feed = document.getElementById("feed");
+  noEchos = document.getElementById("noEchos");
 
-  for (const echo of echos) {
-    appendEcho(feed, echo);
+  if (echos.length === 0) {
+    revealElement(noEchos);
+  } else {
+    hideElement(noEchos);
+
+    for (const echo of echos) {
+      appendEcho(feed, echo);
+    }
   }
 }
 
@@ -148,16 +198,29 @@ function appendEcho(element, echo) {
   element.innerHTML += renderEcho(echo);
 }
 
+function prependEcho(element, echo) {
+  element.innerHTML = renderEcho(echo) + element.innerHTML;
+}
+
 function renderEcho(echo) {
   return `
-  <div class="flow-left flex align-center pbr-bottom">
+  <div data-user-id="${echo.user.id}" class="echo flow-left flex align-center pbr-bottom">
     <div class="flex flex-col align-center flow-s">
       <img class="round" src="${echo.user.gravatar_url}" />
       <p class="f-down-1">${echo.user.first_name}</p>
     </div>
-    <p>${echo.message}</p>
+    <div class="flex flex-col flow-s">
+      <div class="flex flow-left-s"><p class="listenStatus">Listening</p> <button data-user-id="${echo.id}" data-active="1" class="unlisten">Unlisten This Echo</button></div>
+      <p>${echo.message}</p>
+    </div>
   </div>
   `;
+}
+
+function updateStatuses(echoes, status) {
+  for (const echo of echoes) {
+    echo.querySelector(".listenStatus").textContent = status;
+  }
 }
 
 // Utility functions
@@ -171,6 +234,18 @@ function hideElement(element) {
 
 function revealElement(element) {
   element.classList.remove("hidden");
+}
+
+function elementActive(element) {
+  return !!+element.dataset.active;
+}
+
+function activateElement(element) {
+  element.dataset.active = "1";
+}
+
+function deactivateElement(element) {
+  element.dataset.active = "0";
 }
 
 // API calls
@@ -187,7 +262,10 @@ function fetchEchos(id) {
 }
 
 function loadUser(user) {
+  const status = document.getElementById("status");
   current_user = user;
+
+  status.textContent = user.status;
   appendListeners(user.listeners);
 }
 
@@ -222,11 +300,57 @@ function postEcho(echo) {
   const configObj = {
     method: "POST",
     headers: {
-      "Content-Type":"application/json",
-      Accept: "application/json"
+      "Content-Type": "application/json",
+      Accept: "application/json",
     },
     body: JSON.stringify(echo),
   };
 
-  return fetch(`http://localhost:3000/api/v1/echos`, configObj).then(res => res.json())
+  return fetch(`http://localhost:3000/api/v1/echos`, configObj).then((res) =>
+    res.json()
+  );
 }
+
+function listenEcho(echoId) {
+  fetch(
+    `http://localhost:3000/api/v1/echos/listen/${echoId}?listener_id=${current_user.id}`
+  )
+    .then((resp) => resp.json())
+    .catch(console.log);
+}
+
+function unlistenEcho(echoId) {
+  fetch(
+    `http://localhost:3000/api/v1/echos/unlisten/${echoId}?listener_id=${current_user.id}`
+  )
+    .then((resp) => resp.json())
+    .catch(console.log);
+}
+
+function patchStatus(status) {
+  const configObj = {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ user: { status: status } }),
+  };
+
+  fetch(`http://localhost:3000/api/v1/users/${current_user.id}`, configObj)
+    .then((resp) => resp.json())
+    .catch(console.log);
+}
+
+// Graveyard - Here there be monsters
+
+// function removeEchos(userId) {
+//   const feed = document.getElementById("feed");
+//   echoNodes = feed.getElementsByClassName("echo");
+
+//   for (let i = 0; i < echoNodes.length; i++) {
+//     if (+echoNodes[i].dataset.userId === +userId) {
+//       echoNodes[i].parentNode.removeChild(echoNodes[i]);
+//     }
+//   }
+// }
