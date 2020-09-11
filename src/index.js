@@ -11,7 +11,7 @@ function initSubmitEvents() {
   const user = document.getElementById("user");
 
   loginForm.addEventListener("submit", handleLoginFormSubmit);
-  echoForm.addEventListener("submit", handleFormEchoSubmit);
+  echoForm.addEventListener("submit", handleEchoFormSubmit);
   user.addEventListener("submit", handleStatusFormSubmit);
 }
 
@@ -23,10 +23,11 @@ function initClickEvents() {
   feed.addEventListener("mouseup", handleFeedClicks);
 }
 
-function handleFormEchoSubmit(event) {
+function handleEchoFormSubmit(event) {
   event.preventDefault();
 
   const feed = document.getElementById("feed");
+
   const echo = {
     echo: {
       user_id: current_user.id,
@@ -34,11 +35,13 @@ function handleFormEchoSubmit(event) {
       listeners: current_user.listeners.map((listener) => listener.id),
     },
   };
+
   postEcho(echo)
     .then((echo) => {
       prependEcho(feed, echo);
     })
     .catch(console.log);
+
   event.target.message.value = "";
   hideElement(event.target.parentElement);
 }
@@ -85,14 +88,8 @@ function handleUserClicks(event) {
     const echoes = feed.querySelectorAll(`div[data-user-id="${target_id}"]`);
 
     if (elementActive(event.target)) {
-      postListen(target_id).then((echos) => {
-        const randomTime =
-          (Math.floor(Math.random() * Math.floor(4)) + 2) * 1000;
-
-        setTimeout(appendEchos, randomTime, echos);
-      });
-
       updateStatuses(echoes, "Listening");
+      postListen(target_id);
       deactivateListenButton(event.target);
     } else {
       updateStatuses(echoes, "Not Listening");
@@ -339,6 +336,17 @@ function patchStatus(status) {
 
   fetch(`http://localhost:3000/api/v1/users/${current_user.id}`, configObj)
     .then((resp) => resp.json())
+    .catch(console.log);
+}
+
+function seedEchos() {
+  fetch(
+    `http://localhost:3000/api/v1/echos/seed?listener_id=${current_user.id}`
+  )
+    .then((resp) => resp.json())
+    .then((json) => {
+      fetchEchos(current_user.id).then(appendEchos);
+    })
     .catch(console.log);
 }
 
