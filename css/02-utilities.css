@@ -14,8 +14,9 @@
   flex-wrap: wrap;
 }
 
-.flex-between {
-  justify-content: space-between;
+.flex-center {
+  justify-content: center;
+  align-items: center;
 }
 
 .align-center {
@@ -36,6 +37,10 @@
 
 .bg-white {
   background-color: #fff;
+}
+
+.bg-red {
+  background-color: tomato;
 }
 
 .bx-1 {

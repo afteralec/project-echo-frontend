@@ -2,7 +2,7 @@
 html {
   box-sizing: border-box;
   font-size: 16px;
-  font-family: "Helvetica", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 body {
@@ -39,6 +39,10 @@ ul {
   max-width: 100%;
   height: auto;
 } */
+
+input {
+  border: none;
+}
 
 input[type="submit"] {
   border: none;
