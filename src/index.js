@@ -104,6 +104,35 @@ function handleUserClicks(event) {
   } else if (event.target.matches("#logout")) {
     const loginForm = document.getElementById("loginForm");
     const wrapper = document.getElementById("wrapper");
+    const feed = document.getElementById("feed");
+    const user = document.getElementById("user");
+
+    feed.innerHTML = `
+      <div id="noEchos" class="hidden flow-left flex align-center pbr-bottom">
+        <div class="flex flex-col align-center flow-s">
+          <img class="round" src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y&d=robohash" />
+          <p class="f-down-1">Echo</p>
+        </div>
+        <p>Looks like there's no echoes to show!</p>
+      </div>
+    `;
+
+    user.innerHTML = `
+      <!-- Logged-in user -->
+      <div class="bx-1 br-15 flow-s">
+        <h2 class="text-center">Hi, Amelie!</h2>
+        <h4 class="flex flex-row flow-left flex-center">
+          <span>Status:</span>
+          <span id="status" class="user-status"></span>
+          <form id="statusForm" class="hidden"><input type="text" name="status" /></form>
+        </h4>
+        <button id="echoButton" class="px-s br-5 w-fill hvr-purple br-5 clr-white f-up-1">Echo</button>
+        <button id="logout" class="px-s br-5 w-fill hvr-red br-5 clr-white f-up-1">Logout</button>
+      </div>
+
+      <!-- Listeners -->
+      <h2>Listeners:</h2>
+    `;
 
     hideElement(wrapper);
     revealElement(loginForm.parentElement);
@@ -281,6 +310,12 @@ function activateElement(element) {
 
 function deactivateElement(element) {
   element.dataset.active = "0";
+}
+
+function removeAllChildNodes(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
 }
 
 // API calls
