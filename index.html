@@ -23,7 +23,7 @@
           <input class="bx-1 br-5 px-s" type="password" name="password" id="password" />
         </div>
 
-        <input class="w-fill br-5 bg-red px-s-1" type="submit" value="Let's Go!" />
+        <input class="w-fill br-5 hvr-purple clr-white px-s-1 f-up-1" type="submit" value="Let's Go!" />
       </form>
     </div>
 
@@ -34,13 +34,14 @@
 
         <!-- Logged-in user -->
         <div class="bx-1 br-15 flow-s">
-          <h2>Hi, Amelie!</h2>
-          <h4 class="flex flex-row flow-left">
+          <h2 class="text-center">Hi, Amelie!</h2>
+          <h4 class="flex flex-row flow-left flex-center">
             <span>Status:</span>
             <span id="status" class="user-status"></span>
             <form id="statusForm" class="hidden"><input type="text" name="status" /></form>
           </h4>
-          <button class="px-s br-5 echoButton">Echo</button>
+          <button id="echoButton" class="px-s br-5 w-fill hvr-purple br-5 clr-white f-up-1">Echo</button>
+          <button id="logout" class="px-s br-5 w-fill hvr-red br-5 clr-white f-up-1">Logout</button>
         </div>
 
         <!-- Listeners -->
@@ -64,12 +65,12 @@
               <button class="br-5">Zana</button>
               <button class="br-5">Nathan</button>
             </div> -->
-            <button class="px-s br-5">Echo</button>
+            <button class="px-s br-5 hvr-purple br-5 clr-white f-up-1">Echo</button>
           </form>
         </div>
 
         <!-- Echo feed -->
-        <div id="feed" class="px-sides-1 flow flex flex-col px-col-1">
+        <div id="feed" class="fade-r px-sides-1 flow flex flex-col px-col-1">
           <div id="noEchos" class="hidden flow-left flex align-center pbr-bottom">
             <div class="flex flex-col align-center flow-s">
               <img class="round" src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?f=y&d=robohash" />
