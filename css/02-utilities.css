@@ -14,9 +14,18 @@
   flex-wrap: wrap;
 }
 
+.flex-between {
+  justify-content: space-between;
+}
+
 .flex-center {
   justify-content: center;
   align-items: center;
+}
+
+.flex-end {
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .align-center {
@@ -40,7 +49,19 @@
 }
 
 .bg-red {
-  background-color: tomato;
+  background-color: #78281f;
+}
+
+.bg-purple {
+  background-color: #4a235a;
+}
+
+.bg-blue {
+  background-color: #154360;
+}
+
+.clr-white {
+  color: #f3f3f3;
 }
 
 .bx-1 {
@@ -53,4 +74,58 @@
 
 .br-15 {
   border-radius: 15px;
+}
+
+.hvr-purple {
+  background-color: #4a235a;
+}
+
+.hvr-purple:hover {
+  background-color: #76448a;
+  cursor: pointer;
+}
+
+.hvr-red {
+  background-color: #78281f;
+}
+
+.hvr-red:hover {
+  background-color: #943126;
+  cursor: pointer;
+}
+
+.hvr-blue {
+  background-color: #154360;
+}
+
+.hvr-blue:hover {
+  background-color: #21618c;
+  cursor: pointer;
+}
+
+.acv-purple:hover {
+  background-color: #76448a;
+}
+
+.acv-purple:hover {
+  background-color: #4a235a;
+  cursor: pointer;
+}
+
+.acv-blue {
+  background-color: #21618c;
+}
+
+.acv-blue:hover {
+  background-color: #154360;
+  cursor: pointer;
+}
+
+.acv-red {
+  background-color: #943126;
+}
+
+.acv-red:hover {
+  background-color: #78281f;
+  cursor: pointer;
 }

@@ -80,19 +80,17 @@ function handleStatusFormSubmit(event) {
 }
 
 function handleUserClicks(event) {
-  if (event.target.matches(".echoButton")) {
+  if (event.target.matches("#echoButton")) {
     toggleEchoForm();
   } else if (event.target.matches(".listen")) {
     const target_id = event.target.dataset.id;
     const feed = document.getElementById("feed");
-    const echoes = feed.querySelectorAll(`div[data-user-id="${target_id}"]`);
+    // const echoes = feed.querySelectorAll(`div[data-user-id="${target_id}"]`);
 
     if (elementActive(event.target)) {
-      updateStatuses(echoes, "Listening");
       postListen(target_id);
       deactivateListenButton(event.target);
     } else {
-      updateStatuses(echoes, "Not Listening");
       deleteListen(target_id);
       activateListenButton(event.target);
     }
@@ -103,6 +101,13 @@ function handleUserClicks(event) {
     hideElement(status);
     revealElement(statusForm);
     statusForm.status.value = status.textContent;
+  } else if (event.target.matches("#logout")) {
+    const loginForm = document.getElementById("loginForm");
+    const wrapper = document.getElementById("wrapper");
+
+    hideElement(wrapper);
+    revealElement(loginForm.parentElement);
+    current_user = {};
   }
 }
 
@@ -158,9 +163,13 @@ function appendListener(element, listener) {
 }
 
 function renderListener(listener) {
-  return `<div class="flex flow-left-s pbr-bottom">
-            <p>${listener.first_name} - ${listener.status}</p>
-            ${renderListenButton(listener)}
+  return `<div class="fade-l flex flex-between flow-left-s pbr-bottom w-fill">
+            <div class="flex flex-center">
+              <p>${listener.first_name} - ${listener.status}</p>
+            </div>
+            <div class="flex flex-center">
+              ${renderListenButton(listener)}
+            </div>
           </div>`;
 }
 
@@ -173,7 +182,13 @@ function renderListenButton(listener) {
     text = "Unlisten";
   }
 
-  return `<button data-id="${listener.id}" data-active="${active}" class="listen">${text}</button>`;
+  return `
+    <button
+      data-id="${listener.id}"
+      data-active="${active}"
+      class="listen br-5 px-s hvr-purple clr-white min-w-half">
+        ${text}
+    </button>`;
 }
 
 function appendEchos(echos) {
@@ -191,27 +206,50 @@ function appendEchos(echos) {
   }
 }
 
+function appendEchosWithRandDelay(echos) {
+  const feed = document.getElementById("feed");
+  noEchos = document.getElementById("noEchos");
+
+  hideElement(noEchos);
+
+  for (const echo of echos) {
+    const randTime = (Math.floor(Math.random() * Math.floor(4)) + 2) * 1000;
+    setTimeout(appendEcho, randTime, feed, echo);
+  }
+}
+
 function appendEcho(element, echo) {
-  element.innerHTML += renderEcho(echo);
+  element.appendChild(renderEcho(echo));
 }
 
 function prependEcho(element, echo) {
-  element.innerHTML = renderEcho(echo) + element.innerHTML;
+  element.prepend(renderEcho(echo));
 }
 
 function renderEcho(echo) {
-  return `
-  <div data-user-id="${echo.user.id}" class="echo flow-left flex align-center pbr-bottom">
+  const div = document.createElement("div");
+  div.dataset.userId = echo.user.id;
+  div.classList.add("fade-r");
+  div.classList.add("echo");
+  div.classList.add("flow-left");
+  div.classList.add("flex");
+  div.classList.add("align-center");
+  div.classList.add("pbr-bottom");
+
+  div.innerHTML = `
     <div class="flex flex-col align-center flow-s">
       <img class="round" src="${echo.user.gravatar_url}" />
       <p class="f-down-1">${echo.user.first_name}</p>
     </div>
     <div class="flex flex-col flow-s">
-      <div class="flex flow-left-s"><p class="listenStatus">Listening</p> <button data-user-id="${echo.id}" data-active="1" class="unlisten">Unlisten This Echo</button></div>
+      <div class="flex flow-left-s">
+        <button data-user-id="${echo.id}" data-active="1" class="unlisten br-5 px-s hvr-blue clr-white">Unlisten This Echo</button>
+      </div>
       <p>${echo.message}</p>
     </div>
-  </div>
   `;
+
+  return div;
 }
 
 function updateStatuses(echoes, status) {
@@ -345,7 +383,7 @@ function seedEchos() {
   )
     .then((resp) => resp.json())
     .then((json) => {
-      fetchEchos(current_user.id).then(appendEchos);
+      fetchEchos(current_user.id).then(appendEchosWithRandDelay);
     })
     .catch(console.log);
 }

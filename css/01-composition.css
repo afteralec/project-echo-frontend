@@ -62,6 +62,10 @@
   width: 100%;
 }
 
+.min-w-half {
+  min-width: 50%;
+}
+
 .w-25 {
   width: 25vw;
 }
@@ -80,6 +84,10 @@
 
 .f-up-1 {
   font-size: 1.1rem;
+}
+
+.f-1-s {
+  font-size: 1.5rem;
 }
 
 .f-down-1 {

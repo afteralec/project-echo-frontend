@@ -35,3 +35,18 @@ img.round {
   left: 5%;
   bottom: -1px;
 }
+
+.pbr-bottom-s {
+  position: relative;
+}
+
+.pbr-bottom-s:after {
+  content: "";
+  background: #333;
+  opacity: 0.5;
+  position: absolute;
+  width: 80%;
+  height: 1px;
+  left: 10%;
+  bottom: -1px;
+}
